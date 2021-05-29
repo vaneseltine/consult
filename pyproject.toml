@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "consult"
+version = "0.1.0"
+description = "Receive a quick consultation from Engineering!"
+license = "AGPL-3.0-or-later"
+authors = ["Matt VanEseltine <vaneseltine@gmail.com>"]
+readme = "README.md"
+repository = "https://github.com/vaneseltine/consult"
+keywords = ["humor"]
+
+
+[tool.poetry.dependencies]
+python = "^3.9"
+click = "^7.1"
+pyyaml = "5.4.1"
+
+[tool.poetry.dev-dependencies]
+black = {version = "^21.5b1", allow-prereleases = true}
+pytest = "^6.2.4"
+nox = "^2020.12.31"
+pylint = "^2.8.2"
+flake8 = "^3.9.2"
+setuptools = "^57.0.0"
+coverage = "^5.5"
+
+[tool.poetry.scripts]
+consult = "consult:run_consult"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

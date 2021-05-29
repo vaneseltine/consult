@@ -2,6 +2,7 @@ import random
 import re
 from copy import deepcopy
 from pathlib import Path
+from platform import python_version
 from typing import Dict, List, Sequence
 
 import click
@@ -12,16 +13,22 @@ __version__ = "0.1"
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 STATEMENTS_FILE = Path(__file__).parent / "data" / "tech_inputs.yaml"
 STATEMENTS_CONTENT = yaml.safe_load(STATEMENTS_FILE.read_text())
+PROG_DIR = Path(__file__).parent
 
 
-@click.command(help="Receive a quick engineering consultation.")
+@click.command(help="Receive a quick consultation from Engineering!")
 @click.option(
     "--match",
     type=str,
     default="",
     help="Try to receive consultation(s) including MATCH.",
 )
-@click.version_option(version=__version__)
+@click.version_option(
+    __version__,
+    "--version",
+    "-V",
+    message=(f"%(prog)s {__version__} from {PROG_DIR} (Python {python_version()})"),
+)
 def run_consult(match: str = ""):
     """Simple program that greets NAME for a total of COUNT times."""
     technobabble(Technobabbler, match)
