@@ -1,0 +1,19 @@
+# Roughly latest versions of setup.py minimums
+Click
+
+# Dev tools
+black
+coverage
+coveralls
+flake8
+flake8-black
+flake8-comprehensions
+flake8-eradicate
+flake8-isort
+hypothesis
+nox
+pylint
+pytest
+PyYAML
+twine
+wheel

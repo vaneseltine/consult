@@ -1,0 +1,4 @@
+include LICENSE
+include *.md
+include consult/data/*
+prune test
