@@ -87,6 +87,7 @@ def make_first_upper(s: str):
 class ModifiableVerb:
     def __init__(self, verb_info: Sequence[str]):
         self.root, self.s_present, self.s_past, self.s_gerund, *prefixes = verb_info
+        prefixes = prefixes or [""]
         self.prefix = random.choice(prefixes)
 
     @property
