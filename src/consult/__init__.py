@@ -48,7 +48,7 @@ class Technobabbler:
         return capitalize_sentences(completed_babble)
 
     @classmethod
-    def find(cls, match: str = "", tries: int = 100) -> str:
+    def find(cls, match: str = "", tries: int = 1000) -> str:
         if not match:
             return cls().babble()
         for _ in range(tries):
