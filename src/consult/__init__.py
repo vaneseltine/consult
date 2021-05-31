@@ -11,8 +11,8 @@ import yaml
 __version__ = "0.1"
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
-STATEMENTS_FILE = Path(__file__).parent / "data" / "tech_inputs.yaml"
-STATEMENTS_CONTENT = yaml.safe_load(STATEMENTS_FILE.read_text())
+STATEMENTS_FILE = Path(__file__).parent / "inputs.yaml"
+STATEMENTS_CONTENT: Dict[str, List[str]] = yaml.safe_load(STATEMENTS_FILE.read_text())
 PROG_DIR = Path(__file__).parent
 
 
@@ -31,7 +31,16 @@ PROG_DIR = Path(__file__).parent
 )
 def run_consult(match: str = ""):
     """Simple program that greets NAME for a total of COUNT times."""
-    technobabble(Technobabbler, match)
+    babble = get_babble(match)
+    click.echo(babble)
+
+
+def get_babble(match: str = ""):
+    if match:
+        babble = Technobabbler.find(match)
+    else:
+        babble = Technobabbler().babble()
+    return babble
 
 
 class Technobabbler:
@@ -44,8 +53,8 @@ class Technobabbler:
             random.shuffle(self.content[key])
 
     def babble(self) -> str:
-        completed_babble = self.generate("statement")
-        return capitalize_sentences(completed_babble)
+        raw_babble = self.generate("statement")
+        return capitalize_sentences(raw_babble)
 
     @classmethod
     def find(cls, match: str = "", tries: int = 1000) -> str:
@@ -61,12 +70,13 @@ class Technobabbler:
         if item.startswith("verb_"):
             verb_info = self.content["verb"].pop().split(",")
             verb = ModifiableVerb(verb_info)
-            result = getattr(verb, item[5:])
+            verb_version = item[5:]
+            result = verb[verb_version]
         else:
             result = (
                 self.content[item].pop()
-                if len(self.content[item]) > 1
-                else self.content[item][0]
+                # if len(self.content[item]) > 1
+                # else self.content[item][0]
             )
         result = result.format_map(self)
         return result
@@ -75,13 +85,10 @@ class Technobabbler:
         return self.generate(item)
 
 
-def capitalize_sentences(phrase: str) -> str:
-    return "".join(make_first_upper(x) for x in re.split("([!?.] )", phrase))
-
-
-def make_first_upper(s: str):
-    """Uppercase the first letter of s, leaving the rest alone."""
-    return s[:1].upper() + s[1:]
+def capitalize_sentences(complete_statement: str) -> str:
+    sentence_splitter = re.compile(r"([!?.] +)")
+    sentences = sentence_splitter.split(complete_statement)
+    return "".join(x.capitalize() for x in sentences)
 
 
 class ModifiableVerb:
@@ -102,13 +109,8 @@ class ModifiableVerb:
     def gerund(self):
         return self.prefix + self.root + self.s_gerund
 
-
-def technobabble(babbler, match: str = ""):
-    if match:
-        babble = babbler.find(match)
-    else:
-        babble = babbler().babble()
-    click.echo(babble)
+    def __getitem__(self, version: str) -> str:
+        return getattr(self, version)
 
 
 if __name__ == "__main__":

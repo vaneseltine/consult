@@ -22,6 +22,7 @@ pylint = "^2.8.2"
 flake8 = "^3.9.2"
 setuptools = "^57.0.0"
 coverage = "^5.5"
+mypy = "^0.812"
 
 [tool.poetry.scripts]
 consult = "consult:run_consult"

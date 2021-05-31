@@ -1,6 +1,9 @@
+# type: ignore
+
 import sys
 
 import nox
+
 
 # -r on CLI to override and reuse all instead
 nox.options.reuse_existing_virtualenvs = False
@@ -10,16 +13,22 @@ nox.options.stop_on_first_error = True
 WINDOWS = sys.platform.startswith("win")
 
 
-@nox.session(reuse_venv=False)
+# @nox.session(reuse_venv=False)
+@nox.session()
 def test(session):
     session.run("poetry", "install", external=True)
     # session.install("-e", ".")
     session.run(
+        "python",
+        "-m",
         "coverage",
         "run",
+        "--source",
+        "src",
         "-m",
         "pytest",
     )
+    session.run("coverage", "report")
 
 
 @nox.session()
@@ -43,7 +52,12 @@ def lint_pylint(session):
 
 @nox.session(python=False)
 def lint_black(session):
-    session.run("python", "-m", "black", "./")  # , "--target-version", "py36", ".")
+    session.run("python", "-m", "black", "./")
+
+
+@nox.session(python=False)
+def lint_typing(session):
+    session.run("python", "-m", "mypy", "./src")
 
 
 if __name__ == "__main__":
