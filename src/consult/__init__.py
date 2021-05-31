@@ -12,7 +12,7 @@ __version__ = "0.1"
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 STATEMENTS_FILE = Path(__file__).parent / "inputs.yaml"
-STATEMENTS_CONTENT: Dict[str, List[str]] = yaml.safe_load(STATEMENTS_FILE.read_text())
+CONTENT: Dict[str, List[str]] = yaml.safe_load(STATEMENTS_FILE.read_text())
 PROG_DIR = Path(__file__).parent
 
 
@@ -37,15 +37,21 @@ def run_consult(match: str = ""):
 
 def get_babble(match: str = ""):
     if match:
-        babble = Technobabbler.find(match)
-    else:
-        babble = Technobabbler().babble()
-    return babble
+        return find_insight(match)
+    return Technobabbler().babble()
+
+
+def find_insight(match: str = "", tries: int = 1000) -> str:
+    for _ in range(tries):
+        attempt = Technobabbler().babble()
+        if match.lower() in attempt.lower():
+            return attempt
+    return Technobabbler().generate("apology")
 
 
 class Technobabbler:
 
-    _content = {**STATEMENTS_CONTENT}
+    _content = {**CONTENT}
 
     def __init__(self) -> None:
         self.content: Dict[str, List[str]] = deepcopy(self._content)
@@ -56,16 +62,6 @@ class Technobabbler:
         raw_babble = self.generate("statement")
         return capitalize_sentences(raw_babble)
 
-    @classmethod
-    def find(cls, match: str = "", tries: int = 1000) -> str:
-        if not match:
-            return cls().babble()
-        for _ in range(tries):
-            attempt = cls().babble()
-            if re.search(match, attempt, flags=re.IGNORECASE):
-                return attempt
-        return cls().generate("apology")
-
     def generate(self, item: str) -> str:
         if item.startswith("verb_"):
             verb_info = self.content["verb"].pop().split(",")
@@ -73,11 +69,7 @@ class Technobabbler:
             verb_version = item[5:]
             result = verb[verb_version]
         else:
-            result = (
-                self.content[item].pop()
-                # if len(self.content[item]) > 1
-                # else self.content[item][0]
-            )
+            result = self.content[item].pop()
         result = result.format_map(self)
         return result
 
@@ -111,7 +103,3 @@ class ModifiableVerb:
 
     def __getitem__(self, version: str) -> str:
         return getattr(self, version)
-
-
-if __name__ == "__main__":
-    run_consult()
