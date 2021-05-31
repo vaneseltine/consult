@@ -8,7 +8,7 @@ from typing import Dict, List, Sequence
 import click
 import yaml
 
-__version__ = "0.1"
+__version__ = "0.2.0"
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 STATEMENTS_FILE = Path(__file__).parent / "inputs.yaml"
