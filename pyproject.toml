@@ -12,7 +12,7 @@ profile = "black"
 
 [tool.poetry]
 name = "consult"
-version = "0.1.0"
+version = "0.2.0"
 description = "Receive a quick consultation from Engineering!"
 license = "AGPL-3.0-or-later"
 authors = ["Matt VanEseltine <vaneseltine@gmail.com>"]
