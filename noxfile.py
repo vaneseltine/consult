@@ -26,6 +26,11 @@ def cli(session: nox.Session):
 
 
 @nox.session(python=False)
+def lint_imports(session: nox.Session):
+    session.run("python", "-m", "isort", "./")
+
+
+@nox.session(python=False)
 def lint_pylint(session: nox.Session):
     session.run("pylint", "./src")
 
@@ -33,11 +38,6 @@ def lint_pylint(session: nox.Session):
 @nox.session(python=False)
 def lint_typing(session: nox.Session):
     session.run("python", "-m", "mypy", "./src")
-
-
-@nox.session(python=False)
-def lint_imports(session: nox.Session):
-    session.run("python", "-m", "isort", "./")
 
 
 @nox.session(python=False)

@@ -1,6 +1,7 @@
 import random
 import re
 from copy import deepcopy
+from importlib.metadata import version as package_version
 from pathlib import Path
 from platform import python_version
 from typing import Dict, List, Sequence
@@ -8,7 +9,7 @@ from typing import Dict, List, Sequence
 import click
 import yaml
 
-__version__ = "0.2.0"
+__version__ = package_version("consult")
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 STATEMENTS_FILE = Path(__file__).parent / "inputs.yaml"
@@ -27,7 +28,7 @@ PROG_DIR = Path(__file__).parent
     __version__,
     "--version",
     "-V",
-    message=(f"%(prog)s {__version__} from {PROG_DIR} (Python {python_version()})"),
+    message=(f"%(prog)s %(version)s from {PROG_DIR} (Python {python_version()})"),
 )
 def run_consult(match: str = ""):
     """Simple program that greets NAME for a total of COUNT times."""
